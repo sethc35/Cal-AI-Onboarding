@@ -18,7 +18,7 @@ struct ProgressBar: View {
                     .fill(Color(hex: "F9F8FD"))
                 Image(systemName: "arrow.left")
                     .foregroundColor(.black)
-                    .font(.system(size: 16, weight: .medium))
+                    .font(.system(size: 16))
             }
             .frame(width: 40, height: 40)
 

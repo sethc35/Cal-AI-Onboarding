@@ -26,7 +26,7 @@ struct GenderScreen: View {
 
                 VStack(alignment: .leading, spacing: 10) {
                     Text("Choose your Gender")
-                        .font(.system(size: 32, weight: .bold))
+                        .font(.system(size: 32, weight: .semibold))
                         .foregroundColor(.black)
 
                     Text("This will be used to calibrate your custom plan.")
@@ -39,7 +39,7 @@ struct GenderScreen: View {
 
                 VStack(spacing: 14) {
                     ForEach(["Male", "Female", "Other"], id: \.self) { option in
-                        OptionRow(title: option, isSelected: gender == option, alignment: .center)
+                        OptionRow(headerText: option, isSelected: gender == option, alignment: .center)
                             .onTapGesture {
                                 gender = option
                             }
@@ -52,7 +52,7 @@ struct GenderScreen: View {
                     print("Continue tapped with gender: \(gender ?? "")")
                 }
             }
-            .padding(.horizontal, 28)
+            .padding(.horizontal, 14)
             .padding(.bottom, 28)
         }
     }

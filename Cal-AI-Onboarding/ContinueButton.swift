@@ -26,8 +26,15 @@ struct ContinueButton: View {
                 .clipShape(Capsule())
                 .shadow(color: Color.black.opacity(isEnabled ? 0.18 : 0), radius: 12, y: 6)
                 .opacity(isEnabled ? 1 : 0.8)
-                .animation(.easeInOut(duration: 0.15), value: isEnabled)
         }
         .disabled(!isEnabled)
+        .buttonStyle(Static())
+    }
+}
+
+// no click response
+struct Static: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
     }
 }

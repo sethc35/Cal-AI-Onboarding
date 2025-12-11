@@ -17,7 +17,7 @@ struct OptionRow: View {
             .font(.system(size: 17, weight: .medium))
             .frame(maxWidth: .infinity, minHeight: 60, alignment: alignment)
             .padding(.horizontal, 12)
-            .background(isSelected ? Color.black : Color(.systemGray6))
+            .background(isSelected ? Color.black : Color(hex: "F9F8FD"))
             .foregroundColor(isSelected ? .white : .black)
             .cornerRadius(16)
             .shadow(color: Color.black.opacity(isSelected ? 0.18 : 0), radius: isSelected ? 12 : 0, y: 6)

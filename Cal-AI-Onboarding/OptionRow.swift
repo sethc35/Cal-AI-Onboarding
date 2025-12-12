@@ -14,6 +14,9 @@ struct OptionRow: View {
     let isSelected: Bool
     var alignment: Alignment = .center
     var minHeight: CGFloat = 60
+    var animationDelay: Double = 0
+    
+    @State private var hasAppeared = false
     
     var body: some View {
         let textAlignment: Alignment = {
@@ -28,8 +31,9 @@ struct OptionRow: View {
             if let image {
                 image
                     .resizable()
-                    .scaledToFit()
+                    .scaledToFill()
                     .frame(width: 32, height: 32)
+                    .clipShape(Circle())
             }
             
             VStack(alignment: .leading, spacing: subtext == nil ? 0 : 4) {
@@ -57,6 +61,12 @@ struct OptionRow: View {
         .cornerRadius(16)
         .shadow(color: Color.black.opacity(isSelected ? 0.18 : 0), radius: isSelected ? 12 : 0, y: 6)
         .contentTransition(.opacity)
-        .animation(.easeInOut(duration: 0.2), value: isSelected)
+        .opacity(hasAppeared ? 1 : 0)
+        .scaleEffect(hasAppeared ? 1 : 0.6)
+        .animation(.spring(response: 1, dampingFraction: 0.7).delay(animationDelay), value: hasAppeared) // inital load animation
+        .animation(.easeInOut(duration: 0.2), value: isSelected) // selection animation
+        .onAppear {
+            hasAppeared = true
+        }
     }
 }

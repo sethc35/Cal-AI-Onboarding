@@ -1,74 +1,54 @@
 import SwiftUI
 
 struct HearAboutScreen: View {
-    private struct SourceOption: Identifiable {
-        let id = UUID()
-        let title: String
-    }
+    @EnvironmentObject private var onboarding: OnboardingData
 
-    private let options: [SourceOption] = [
-        .init(title: "Google"),
-        .init(title: "Youtube"),
-        .init(title: "TikTok"),
-        .init(title: "X"),
-        .init(title: "App Store"),
-        .init(title: "Friend or family"),
-        .init(title: "TV"),
-        .init(title: "Instagram"),
-        .init(title: "Facebook"),
-        .init(title: "Other"),
+    private let options: [String] = [
+        "Google",
+        "Youtube",
+        "TikTok",
+        "X",
+        "App Store",
+        "Friend or family",
+        "TV",
+        "Instagram",
+        "Facebook",
+        "Other"
     ]
 
-    private var optionRows: [OptionRowConfiguration<SourceOption.ID>] {
+    private var optionRows: [OptionRowConfiguration<String>] {
         options.map { option in
             OptionRowConfiguration(
-                id: option.id,
-                headerText: option.title,
+                id: option,
+                headerText: option,
                 image: Image("pink-gradient-sample"),
                 alignment: .leading
             )
         }
     }
 
-    @State private var selectedID: SourceOption.ID? = nil
-
-    let steps: Int
-    let currentStep: Int
-    let onBack: (() -> Void)?
-    let onContinue: () -> Void
-
-    init(
-        steps: Int = 4,
-        currentStep: Int = 3,
-        onBack: (() -> Void)? = nil,
-        onContinue: @escaping () -> Void = {}
-    ) {
-        self.steps = steps
-        self.currentStep = currentStep
-        self.onBack = onBack
-        self.onContinue = onContinue
-    }
-
     var body: some View {
         OnboardingScaffold(
-            steps: steps,
-            currentStep: currentStep,
+            steps: onboarding.totalSteps,
+            currentStep: onboarding.currentStepNumber,
             title: "Where did you hear about us?",
             subtitle: "",
             scroll: true,
-            isContinueEnabled: selectedID != nil, backAction: onBack,
+            isContinueEnabled: onboarding.hearAboutSource != nil,
+            backAction: onboarding.canGoBack ? { onboarding.goBack() } : nil,
             continueAction: {
-                if let option = options.first(where: { $0.id == selectedID }) {
-                    print("Continue tapped with source: \(option.title)")
-                    onContinue()
+                if let source = onboarding.hearAboutSource {
+                    print("Continue tapped with source: \(source)")
                 }
+                onboarding.goForward()
             }
         ) {
-            OptionRows(options: optionRows, selectedID: $selectedID, isScrollable: true)
+            OptionRows(options: optionRows, selectedID: $onboarding.hearAboutSource, isScrollable: true)
         }
     }
 }
 
 #Preview {
     HearAboutScreen()
+        .environmentObject(OnboardingData())
 }

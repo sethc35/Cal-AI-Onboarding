@@ -1,68 +1,57 @@
 import SwiftUI
 
 struct NumWorkoutsScreen: View {
-    private struct WorkoutOption: Identifiable {
-        let id = UUID()
-        let title: String
-        let subtitle: String
-    }
+    @EnvironmentObject private var onboarding: OnboardingData
 
-    private let options: [WorkoutOption] = [
-        .init(title: "0-2", subtitle: "Workouts now and then"),
-        .init(title: "3-5", subtitle: "A few workouts per week"),
-        .init(title: "6+", subtitle: "Dedicated athlete")
+    private let options: [OptionRowConfiguration<String>] = [
+        OptionRowConfiguration(
+            id: "0-2",
+            headerText: "0-2",
+            subtext: "Workouts now and then",
+            image: Image("pink-gradient-sample"),
+            alignment: .leading
+        ),
+        OptionRowConfiguration(
+            id: "3-5",
+            headerText: "3-5",
+            subtext: "A few workouts per week",
+            image: Image("pink-gradient-sample"),
+            alignment: .leading
+        ),
+        OptionRowConfiguration(
+            id: "6+",
+            headerText: "6+",
+            subtext: "Dedicated athlete",
+            image: Image("pink-gradient-sample"),
+            alignment: .leading
+        )
     ]
 
-    private var optionRows: [OptionRowConfiguration<WorkoutOption.ID>] {
-        options.map { option in
-            OptionRowConfiguration(
-                id: option.id,
-                headerText: option.title,
-                subtext: option.subtitle,
-                image: Image("pink-gradient-sample"),
-                alignment: .leading
-            )
-        }
-    }
-
-    @State private var selectedOptionID: WorkoutOption.ID? = nil
-
-    let steps: Int
-    let currentStep: Int
-    let onBack: (() -> Void)?
-    let onContinue: () -> Void
-
-    init(
-        steps: Int = 4,
-        currentStep: Int = 2,
-        onBack: (() -> Void)? = nil,
-        onContinue: @escaping () -> Void = {}
-    ) {
-        self.steps = steps
-        self.currentStep = currentStep
-        self.onBack = onBack
-        self.onContinue = onContinue
+    private var optionRows: [OptionRowConfiguration<String>] {
+        options
     }
 
     var body: some View {
         OnboardingScaffold(
-            steps: steps,
-            currentStep: currentStep,
+            steps: onboarding.totalSteps,
+            currentStep: onboarding.currentStepNumber,
             title: "How many workouts do you do per week?",
             subtitle: "This will be used to calibrate your custom plan.",
-            isContinueEnabled: selectedOptionID != nil, backAction: onBack,
+            isContinueEnabled: onboarding.workoutsPerWeek != nil,
+            backAction: onboarding.canGoBack ? { onboarding.goBack() } : nil,
             continueAction: {
-                if let option = options.first(where: { $0.id == selectedOptionID }) {
-                    print("Continue tapped with workouts: \(option.title)")
-                    onContinue()
+                if let selection = onboarding.workoutsPerWeek {
+                    print("Continue tapped with workouts: \(selection)")
                 }
+                onboarding.goForward()
             }
         ) {
-            OptionRows(options: optionRows, selectedID: $selectedOptionID)
+            OptionRows(options: optionRows, selectedID: $onboarding.workoutsPerWeek)
         }
     }
 }
 
 #Preview {
     NumWorkoutsScreen()
+        .environmentObject(OnboardingData())
 }

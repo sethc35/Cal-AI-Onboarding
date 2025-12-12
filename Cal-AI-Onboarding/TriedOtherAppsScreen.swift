@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct TriedOtherAppsScreen: View {
+    @EnvironmentObject private var onboarding: OnboardingData
+
     private enum Option: String, Identifiable, CaseIterable {
         case no = "No"
         case yes = "Yes"
@@ -19,45 +21,28 @@ struct TriedOtherAppsScreen: View {
         }
     }
 
-    @State private var selectedOptionID: Option.ID? = nil
-
-    let steps: Int
-    let currentStep: Int
-    let onBack: (() -> Void)?
-    let onContinue: () -> Void
-
-    init(
-        steps: Int = 4,
-        currentStep: Int = 4,
-        onBack: (() -> Void)? = nil,
-        onContinue: @escaping () -> Void = {}
-    ) {
-        self.steps = steps
-        self.currentStep = currentStep
-        self.onBack = onBack
-        self.onContinue = onContinue
-    }
-
     var body: some View {
         OnboardingScaffold(
-            steps: steps,
-            currentStep: currentStep,
+            steps: onboarding.totalSteps,
+            currentStep: onboarding.currentStepNumber,
             title: "Have you tried other calorie tracking apps?",
             subtitle: "",
-            isContinueEnabled: selectedOptionID != nil, backAction: onBack,
+            isContinueEnabled: onboarding.triedOtherAppsSelection != nil,
+            backAction: onboarding.canGoBack ? { onboarding.goBack() } : nil,
             continueAction: {
-                if let selection = selectedOptionID,
+                if let selection = onboarding.triedOtherAppsSelection,
                    let option = Option(rawValue: selection) {
                     print("Continue tapped with tried other apps selection: \(option.rawValue)")
-                    onContinue()
                 }
+                onboarding.goForward()
             }
         ) {
-            OptionRows(options: optionRows, selectedID: $selectedOptionID)
+            OptionRows(options: optionRows, selectedID: $onboarding.triedOtherAppsSelection)
         }
     }
 }
 
 #Preview {
     TriedOtherAppsScreen()
+        .environmentObject(OnboardingData())
 }

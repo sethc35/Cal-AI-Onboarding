@@ -8,25 +8,8 @@
 import SwiftUI
 
 struct GenderScreen: View {
-    @State private var gender: String? = nil
-
-    let steps: Int
-    let currentStep: Int
-    let onBack: (() -> Void)?
-    let onContinue: () -> Void
+    @EnvironmentObject private var onboarding: OnboardingData
     private let genderOptions = ["Male", "Female", "Other"]
-
-    init(
-        steps: Int = 4,
-        currentStep: Int = 1,
-        onBack: (() -> Void)? = nil,
-        onContinue: @escaping () -> Void = {}
-    ) {
-        self.steps = steps
-        self.currentStep = currentStep
-        self.onBack = onBack
-        self.onContinue = onContinue
-    }
 
     private var optionRows: [OptionRowConfiguration<String>] {
         genderOptions.map { option in
@@ -40,22 +23,24 @@ struct GenderScreen: View {
     
     var body: some View {
         OnboardingScaffold(
-            steps: steps,
-            currentStep: currentStep,
+            steps: onboarding.totalSteps,
+            currentStep: onboarding.currentStepNumber,
             title: "Choose your Gender",
             subtitle: "This will be used to calibrate your custom plan.",
-            isContinueEnabled: gender != nil, backAction: onBack,
+            isContinueEnabled: onboarding.gender != nil,
+            backAction: onboarding.canGoBack ? { onboarding.goBack() } : nil,
             continueAction: {
-                guard let gender else { return }
+                guard let gender = onboarding.gender else { return }
                 print("Continue tapped with gender: \(gender)")
-                onContinue()
+                onboarding.goForward()
             }
         ) {
-            OptionRows(options: optionRows, selectedID: $gender)
+            OptionRows(options: optionRows, selectedID: $onboarding.gender)
         }
     }
 }
 
 #Preview {
     GenderScreen()
+        .environmentObject(OnboardingData())
 }

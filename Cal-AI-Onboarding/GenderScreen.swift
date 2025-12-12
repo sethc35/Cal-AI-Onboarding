@@ -10,9 +10,23 @@ import SwiftUI
 struct GenderScreen: View {
     @State private var gender: String? = nil
 
-    let steps = 6
-    let currentStep = 1
+    let steps: Int
+    let currentStep: Int
+    let onBack: (() -> Void)?
+    let onContinue: () -> Void
     private let genderOptions = ["Male", "Female", "Other"]
+
+    init(
+        steps: Int = 4,
+        currentStep: Int = 1,
+        onBack: (() -> Void)? = nil,
+        onContinue: @escaping () -> Void = {}
+    ) {
+        self.steps = steps
+        self.currentStep = currentStep
+        self.onBack = onBack
+        self.onContinue = onContinue
+    }
 
     private var optionRows: [OptionRowConfiguration<String>] {
         genderOptions.map { option in
@@ -30,9 +44,11 @@ struct GenderScreen: View {
             currentStep: currentStep,
             title: "Choose your Gender",
             subtitle: "This will be used to calibrate your custom plan.",
-            isContinueEnabled: gender != nil,
+            isContinueEnabled: gender != nil, backAction: onBack,
             continueAction: {
-                print("Continue tapped with gender: \(gender ?? "")")
+                guard let gender else { return }
+                print("Continue tapped with gender: \(gender)")
+                onContinue()
             }
         ) {
             OptionRows(options: optionRows, selectedID: $gender)

@@ -27,8 +27,22 @@ struct NumWorkoutsScreen: View {
 
     @State private var selectedOptionID: WorkoutOption.ID? = nil
 
-    let steps = 6
-    let currentStep = 2
+    let steps: Int
+    let currentStep: Int
+    let onBack: (() -> Void)?
+    let onContinue: () -> Void
+
+    init(
+        steps: Int = 4,
+        currentStep: Int = 2,
+        onBack: (() -> Void)? = nil,
+        onContinue: @escaping () -> Void = {}
+    ) {
+        self.steps = steps
+        self.currentStep = currentStep
+        self.onBack = onBack
+        self.onContinue = onContinue
+    }
 
     var body: some View {
         OnboardingScaffold(
@@ -36,10 +50,11 @@ struct NumWorkoutsScreen: View {
             currentStep: currentStep,
             title: "How many workouts do you do per week?",
             subtitle: "This will be used to calibrate your custom plan.",
-            isContinueEnabled: selectedOptionID != nil,
+            isContinueEnabled: selectedOptionID != nil, backAction: onBack,
             continueAction: {
                 if let option = options.first(where: { $0.id == selectedOptionID }) {
                     print("Continue tapped with workouts: \(option.title)")
+                    onContinue()
                 }
             }
         ) {

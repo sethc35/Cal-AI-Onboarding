@@ -12,6 +12,7 @@ struct OptionRowConfiguration<ID: Hashable>: Identifiable {
 struct OptionRows<ID: Hashable>: View {
     let options: [OptionRowConfiguration<ID>]
     @Binding var selectedID: ID?
+    var isScrollable: Bool = false
 
     var body: some View {
         VStack(spacing: 14) {
@@ -30,5 +31,6 @@ struct OptionRows<ID: Hashable>: View {
                 }
             }
         }
+        .frame(maxWidth: .infinity, alignment: isScrollable ? .leading : .center)
     }
 }

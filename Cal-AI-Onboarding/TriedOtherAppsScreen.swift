@@ -2,8 +2,8 @@ import SwiftUI
 
 struct TriedOtherAppsScreen: View {
     private enum Option: String, Identifiable, CaseIterable {
-        case yes = "Yes"
         case no = "No"
+        case yes = "Yes"
 
         var id: String { rawValue }
     }
@@ -21,8 +21,22 @@ struct TriedOtherAppsScreen: View {
 
     @State private var selectedOptionID: Option.ID? = nil
 
-    let steps = 6
-    let currentStep = 4
+    let steps: Int
+    let currentStep: Int
+    let onBack: (() -> Void)?
+    let onContinue: () -> Void
+
+    init(
+        steps: Int = 4,
+        currentStep: Int = 4,
+        onBack: (() -> Void)? = nil,
+        onContinue: @escaping () -> Void = {}
+    ) {
+        self.steps = steps
+        self.currentStep = currentStep
+        self.onBack = onBack
+        self.onContinue = onContinue
+    }
 
     var body: some View {
         OnboardingScaffold(
@@ -30,11 +44,12 @@ struct TriedOtherAppsScreen: View {
             currentStep: currentStep,
             title: "Have you tried other calorie tracking apps?",
             subtitle: "",
-            isContinueEnabled: selectedOptionID != nil,
+            isContinueEnabled: selectedOptionID != nil, backAction: onBack,
             continueAction: {
                 if let selection = selectedOptionID,
                    let option = Option(rawValue: selection) {
                     print("Continue tapped with tried other apps selection: \(option.rawValue)")
+                    onContinue()
                 }
             }
         ) {

@@ -14,6 +14,7 @@ struct OnboardingScaffold<Content: View>: View {
     let subtitle: String
     let isContinueEnabled: Bool
     let continueAction: () -> Void
+    let backAction: (() -> Void)?
     let scroll: Bool
     private let content: () -> Content
     private let bottomScrollPadding: CGFloat = 160
@@ -25,6 +26,7 @@ struct OnboardingScaffold<Content: View>: View {
         subtitle: String = "",
         scroll: Bool = false,
         isContinueEnabled: Bool,
+        backAction: (() -> Void)? = nil,
         continueAction: @escaping () -> Void,
         @ViewBuilder content: @escaping () -> Content
     ) {
@@ -34,6 +36,7 @@ struct OnboardingScaffold<Content: View>: View {
         self.subtitle = subtitle
         self.scroll = scroll
         self.isContinueEnabled = isContinueEnabled
+        self.backAction = backAction
         self.continueAction = continueAction
         self.content = content
     }
@@ -44,9 +47,13 @@ struct OnboardingScaffold<Content: View>: View {
                 .ignoresSafeArea()
 
             VStack(spacing: 24) {
-                ProgressBar(currentStep: currentStep, totalSteps: steps)
-                    .frame(height: 3)
-                    .padding(.top, 12)
+                ProgressBar(
+                    currentStep: currentStep,
+                    totalSteps: steps,
+                    backAction: backAction
+                )
+                .frame(maxWidth: .infinity)
+                .padding(.top, 12)
 
                 VStack(alignment: .leading, spacing: 10) {
                     Text(title)

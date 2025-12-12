@@ -10,17 +10,26 @@ import SwiftUI
 struct ProgressBar: View {
     var currentStep: Int
     var totalSteps: Int
+    var backAction: (() -> Void)? = nil
     
     var body: some View {
         HStack(spacing: 12) {
-            ZStack {
-                Circle()
-                    .fill(Color(hex: "F9F8FD"))
-                Image(systemName: "arrow.left")
-                    .foregroundColor(.black)
-                    .font(.system(size: 16))
+            Button(action: {
+                guard let backAction else { return }
+                backAction()
+            }) {
+                ZStack {
+                    Circle()
+                        .fill(Color(hex: "F9F8FD"))
+                    Image(systemName: "arrow.left")
+                        .foregroundColor(.black)
+                        .font(.system(size: 16))
+                }
             }
             .frame(width: 40, height: 40)
+            .disabled(backAction == nil)
+            .opacity(backAction == nil ? 0 : 1)
+            .buttonStyle(.plain)
 
             GeometryReader { geo in
                 let fullWidth = geo.size.width

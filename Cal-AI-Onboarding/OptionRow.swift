@@ -42,7 +42,7 @@ struct OptionRow: View {
                 if let subtext {
                     Text(subtext)
                         .font(.system(size: 14))
-                        .foregroundColor(Color(hex: "6C6C75"))
+                        .foregroundColor(isSelected ? .white : Color(hex: "6C6C75"))
                 }
             }
             .frame(maxWidth: .infinity, alignment: textAlignment)

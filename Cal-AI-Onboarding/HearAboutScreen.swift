@@ -32,8 +32,22 @@ struct HearAboutScreen: View {
 
     @State private var selectedID: SourceOption.ID? = nil
 
-    let steps = 6
-    let currentStep = 3
+    let steps: Int
+    let currentStep: Int
+    let onBack: (() -> Void)?
+    let onContinue: () -> Void
+
+    init(
+        steps: Int = 4,
+        currentStep: Int = 3,
+        onBack: (() -> Void)? = nil,
+        onContinue: @escaping () -> Void = {}
+    ) {
+        self.steps = steps
+        self.currentStep = currentStep
+        self.onBack = onBack
+        self.onContinue = onContinue
+    }
 
     var body: some View {
         OnboardingScaffold(
@@ -42,14 +56,15 @@ struct HearAboutScreen: View {
             title: "Where did you hear about us?",
             subtitle: "",
             scroll: true,
-            isContinueEnabled: selectedID != nil,
+            isContinueEnabled: selectedID != nil, backAction: onBack,
             continueAction: {
                 if let option = options.first(where: { $0.id == selectedID }) {
                     print("Continue tapped with source: \(option.title)")
+                    onContinue()
                 }
             }
         ) {
-            OptionRows(options: optionRows, selectedID: $selectedID)
+            OptionRows(options: optionRows, selectedID: $selectedID, isScrollable: true)
         }
     }
 }

@@ -13,6 +13,18 @@ struct NumWorkoutsScreen: View {
         .init(title: "6+", subtitle: "Dedicated athlete")
     ]
 
+    private var optionRows: [OptionRowConfiguration<WorkoutOption.ID>] {
+        options.map { option in
+            OptionRowConfiguration(
+                id: option.id,
+                headerText: option.title,
+                subtext: option.subtitle,
+                image: Image("pink-gradient-sample"),
+                alignment: .leading
+            )
+        }
+    }
+
     @State private var selectedOptionID: WorkoutOption.ID? = nil
 
     let steps = 6
@@ -31,21 +43,7 @@ struct NumWorkoutsScreen: View {
                 }
             }
         ) {
-            VStack(spacing: 14) {
-                ForEach(Array(options.enumerated()), id: \.element.id) { index, option in
-                    OptionRow(
-                        headerText: option.title,
-                        subtext: option.subtitle,
-                        image: Image("pink-gradient-sample"),
-                        isSelected: option.id == selectedOptionID,
-                        alignment: .leading,
-                        animationDelay: Double(index) * 0.1
-                    )
-                    .onTapGesture {
-                        selectedOptionID = option.id
-                    }
-                }
-            }
+            OptionRows(options: optionRows, selectedID: $selectedOptionID)
         }
     }
 }

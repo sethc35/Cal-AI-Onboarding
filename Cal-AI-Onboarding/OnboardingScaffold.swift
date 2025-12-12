@@ -14,13 +14,16 @@ struct OnboardingScaffold<Content: View>: View {
     let subtitle: String
     let isContinueEnabled: Bool
     let continueAction: () -> Void
+    let scroll: Bool
     private let content: () -> Content
+    private let bottomScrollPadding: CGFloat = 160
 
     init(
         steps: Int,
         currentStep: Int,
         title: String,
         subtitle: String = "",
+        scroll: Bool = false,
         isContinueEnabled: Bool,
         continueAction: @escaping () -> Void,
         @ViewBuilder content: @escaping () -> Content
@@ -29,6 +32,7 @@ struct OnboardingScaffold<Content: View>: View {
         self.currentStep = currentStep
         self.title = title
         self.subtitle = subtitle
+        self.scroll = scroll
         self.isContinueEnabled = isContinueEnabled
         self.continueAction = continueAction
         self.content = content
@@ -48,23 +52,43 @@ struct OnboardingScaffold<Content: View>: View {
                     Text(title)
                         .font(.system(size: 32, weight: .semibold))
                         .foregroundColor(.black)
+                        .multilineTextAlignment(.leading)
+                        .fixedSize(horizontal: false, vertical: true)
 
                     if !subtitle.isEmpty {
                         Text(subtitle)
                             .font(.system(size: 17, weight: .regular))
                             .foregroundColor(.gray)
+                            .multilineTextAlignment(.leading)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
 
-                Spacer()
-
-                content()
-
-                Spacer(minLength: 0)
+                Group {
+                    if scroll {
+                        ScrollView(showsIndicators: false) {
+                            content()
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(.bottom, bottomScrollPadding)
+                        }
+                    } else {
+                        VStack {
+                            Spacer()
+                            content()
+                            Spacer()
+                        }
+                        .padding(.bottom, bottomScrollPadding)
+                    }
+                }
+                .frame(
+                    maxWidth: .infinity,
+                    maxHeight: .infinity,
+                    alignment: scroll ? .top : .center
+                )
             }
             .padding(.horizontal, 14)
-            .padding(.bottom, 160)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
 
             bottomOverlay
         }
@@ -94,14 +118,14 @@ struct OnboardingScaffold<Content: View>: View {
             .frame(maxWidth: .infinity)
             .background(
                 Color.white
-                    .overlay(
-                        Rectangle()
-                            .fill(Color.black.opacity(0.08))
-                            .frame(height: 1),
-                        alignment: .top
-                    )
+                    .ignoresSafeArea(edges: .bottom)
+            )
+            .overlay(
+                Rectangle()
+                    .fill(Color.black.opacity(0.08))
+                    .frame(height: 1),
+                alignment: .top
             )
         }
-        .ignoresSafeArea(edges: .bottom)
     }
 }

@@ -13,6 +13,16 @@ struct GenderScreen: View {
     let steps = 6
     let currentStep = 1
     private let genderOptions = ["Male", "Female", "Other"]
+
+    private var optionRows: [OptionRowConfiguration<String>] {
+        genderOptions.map { option in
+            OptionRowConfiguration(
+                id: option,
+                headerText: option,
+                alignment: .center
+            )
+        }
+    }
     
     var body: some View {
         OnboardingScaffold(
@@ -25,19 +35,7 @@ struct GenderScreen: View {
                 print("Continue tapped with gender: \(gender ?? "")")
             }
         ) {
-            VStack(spacing: 14) {
-                ForEach(Array(genderOptions.enumerated()), id: \.offset) { index, option in
-                    OptionRow(
-                        headerText: option,
-                        isSelected: gender == option,
-                        alignment: .center,
-                        animationDelay: Double(index) * 0.1
-                    )
-                        .onTapGesture {
-                            gender = option
-                        }
-                }
-            }
+            OptionRows(options: optionRows, selectedID: $gender)
         }
     }
 }

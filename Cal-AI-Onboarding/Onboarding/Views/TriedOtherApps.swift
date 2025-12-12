@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct TriedOtherAppsScreen: View {
+struct TriedOtherApps: View {
     @EnvironmentObject private var onboarding: OnboardingData
 
     private enum Option: String, Identifiable, CaseIterable {
@@ -43,6 +43,6 @@ struct TriedOtherAppsScreen: View {
 }
 
 #Preview {
-    TriedOtherAppsScreen()
+    TriedOtherApps()
         .environmentObject(OnboardingData())
 }

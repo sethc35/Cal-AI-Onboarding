@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct WelcomeScreen: View {
+struct Welcome: View {
     @EnvironmentObject private var onboarding: OnboardingData
 
     var body: some View {
@@ -42,6 +42,6 @@ struct WelcomeScreen: View {
 }
 
 #Preview {
-    WelcomeScreen()
+    Welcome()
         .environmentObject(OnboardingData())
 }

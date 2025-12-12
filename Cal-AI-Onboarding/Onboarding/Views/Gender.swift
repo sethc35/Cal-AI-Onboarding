@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct GenderScreen: View {
+struct Gender: View {
     @EnvironmentObject private var onboarding: OnboardingData
     private let genderOptions = ["Male", "Female", "Other"]
 
@@ -41,6 +41,6 @@ struct GenderScreen: View {
 }
 
 #Preview {
-    GenderScreen()
+    Gender()
         .environmentObject(OnboardingData())
 }

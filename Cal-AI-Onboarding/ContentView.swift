@@ -14,17 +14,17 @@ struct ContentView: View {
         Group {
             switch onboardingData.currentStep {
             case .welcome:
-                WelcomeScreen()
+                Welcome()
             case .gender:
-                GenderScreen()
+                Gender()
             case .workouts:
-                NumWorkoutsScreen()
+                NumWorkouts()
             case .hearAbout:
-                HearAboutScreen()
+                HearAbout()
             case .triedOtherApps:
-                TriedOtherAppsScreen()
+                TriedOtherApps()
             case .results:
-                LongTermResultsScreen()
+                LongTermResults()
             }
         }
         .animation(.easeInOut, value: onboardingData.currentStep)

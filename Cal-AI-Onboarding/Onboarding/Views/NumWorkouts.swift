@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct NumWorkoutsScreen: View {
+struct NumWorkouts: View {
     @EnvironmentObject private var onboarding: OnboardingData
 
     private let options: [OptionRowConfiguration<String>] = [
@@ -52,6 +52,6 @@ struct NumWorkoutsScreen: View {
 }
 
 #Preview {
-    NumWorkoutsScreen()
+    NumWorkouts()
         .environmentObject(OnboardingData())
 }

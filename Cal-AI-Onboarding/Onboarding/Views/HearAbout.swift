@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct HearAboutScreen: View {
+struct HearAbout: View {
     @EnvironmentObject private var onboarding: OnboardingData
 
     private let options: [String] = [
@@ -49,6 +49,6 @@ struct HearAboutScreen: View {
 }
 
 #Preview {
-    HearAboutScreen()
+    HearAbout()
         .environmentObject(OnboardingData())
 }

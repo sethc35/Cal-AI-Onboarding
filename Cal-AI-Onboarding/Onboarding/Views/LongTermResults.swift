@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct LongTermResultsScreen: View {
+struct LongTermResults: View {
     @EnvironmentObject private var onboarding: OnboardingData
     @State private var showCaption = false
 
@@ -39,8 +39,9 @@ struct LongTermResultsScreen: View {
                 .resizable()
                 .scaledToFit()
                 .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+            
             caption
-                }
+        }
         .padding(20)
         .frame(maxWidth: .infinity)
         .background(Color(hex: "F4F4F6"))
@@ -53,6 +54,7 @@ struct LongTermResultsScreen: View {
             captionLine("weight loss even 6 months later", index: 1)
         }
         .frame(maxWidth: .infinity)
+        .multilineTextAlignment(.center)
     }
 
     private func captionLine(_ text: String, index: Int) -> some View {
@@ -66,6 +68,6 @@ struct LongTermResultsScreen: View {
 }
 
 #Preview {
-    LongTermResultsScreen()
+    LongTermResults()
         .environmentObject(OnboardingData())
 }

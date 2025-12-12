@@ -1,3 +1,10 @@
+//
+//  OptionRows.swift
+//  Cal-AI-Onboarding
+//
+//  Created by Seth Chang on 12/12/25.
+//
+
 import SwiftUI
 
 struct OptionRowConfiguration<ID: Hashable>: Identifiable {

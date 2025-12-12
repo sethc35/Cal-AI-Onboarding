@@ -13,6 +13,8 @@ struct ContentView: View {
     var body: some View {
         Group {
             switch onboardingData.currentStep {
+            case .welcome:
+                WelcomeScreen()
             case .gender:
                 GenderScreen()
             case .workouts:
@@ -21,8 +23,11 @@ struct ContentView: View {
                 HearAboutScreen()
             case .triedOtherApps:
                 TriedOtherAppsScreen()
+            case .results:
+                LongTermResultsScreen()
             }
         }
+        .animation(.easeInOut, value: onboardingData.currentStep)
         .environmentObject(onboardingData)
     }
 }

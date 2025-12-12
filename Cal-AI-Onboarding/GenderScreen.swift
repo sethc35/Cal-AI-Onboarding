@@ -28,7 +28,7 @@ struct GenderScreen: View {
             title: "Choose your Gender",
             subtitle: "This will be used to calibrate your custom plan.",
             isContinueEnabled: onboarding.gender != nil,
-            backAction: onboarding.canGoBack ? { onboarding.goBack() } : nil,
+            backAction: { onboarding.goBack() },
             continueAction: {
                 guard let gender = onboarding.gender else { return }
                 print("Continue tapped with gender: \(gender)")

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ContinueButton: View {
     var isEnabled: Bool
+    var title: String = "Continue"
     var action: () -> Void
 
     var body: some View {
@@ -17,7 +18,7 @@ struct ContinueButton: View {
                 action()
             }
         }) {
-            Text("Continue")
+            Text(title)
                 .font(.system(size: 18, weight: .medium))
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 18)

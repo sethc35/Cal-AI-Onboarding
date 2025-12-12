@@ -1,0 +1,107 @@
+//
+//  OnboardingScaffold.swift
+//  Cal-AI-Onboarding
+//
+//  Created by Seth Chang on 12/11/25.
+//
+
+import SwiftUI
+
+struct OnboardingScaffold<Content: View>: View {
+    let steps: Int
+    let currentStep: Int
+    let title: String
+    let subtitle: String
+    let isContinueEnabled: Bool
+    let continueAction: () -> Void
+    private let content: () -> Content
+
+    init(
+        steps: Int,
+        currentStep: Int,
+        title: String,
+        subtitle: String = "",
+        isContinueEnabled: Bool,
+        continueAction: @escaping () -> Void,
+        @ViewBuilder content: @escaping () -> Content
+    ) {
+        self.steps = steps
+        self.currentStep = currentStep
+        self.title = title
+        self.subtitle = subtitle
+        self.isContinueEnabled = isContinueEnabled
+        self.continueAction = continueAction
+        self.content = content
+    }
+
+    var body: some View {
+        ZStack(alignment: .bottom) {
+            Color(.white)
+                .ignoresSafeArea()
+
+            VStack(spacing: 24) {
+                ProgressBar(currentStep: currentStep, totalSteps: steps)
+                    .frame(height: 3)
+                    .padding(.top, 12)
+
+                VStack(alignment: .leading, spacing: 10) {
+                    Text(title)
+                        .font(.system(size: 32, weight: .semibold))
+                        .foregroundColor(.black)
+
+                    if !subtitle.isEmpty {
+                        Text(subtitle)
+                            .font(.system(size: 17, weight: .regular))
+                            .foregroundColor(.gray)
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+                Spacer()
+
+                content()
+
+                Spacer(minLength: 0)
+            }
+            .padding(.horizontal, 14)
+            .padding(.bottom, 160)
+
+            bottomOverlay
+        }
+    }
+
+    private var bottomOverlay: some View {
+        VStack(spacing: 0) {
+            LinearGradient(
+                gradient: Gradient(colors: [
+                    Color.white.opacity(0),
+                    Color.white.opacity(0.4),
+                    Color.white
+                ]),
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .frame(height: 140)
+            .frame(maxWidth: .infinity)
+            .allowsHitTesting(false)
+
+            VStack {
+                ContinueButton(isEnabled: isContinueEnabled, action: continueAction)
+            }
+            .padding(.horizontal, 14)
+            .padding(.top, 18)
+            .padding(.bottom, 32)
+            .frame(maxWidth: .infinity)
+            .background(
+                Color.white
+                    .overlay(
+                        Rectangle()
+                            .fill(Color.black.opacity(0.08))
+                            .frame(height: 1),
+                        alignment: .top
+                    )
+            )
+        }
+        .ignoresSafeArea(edges: .bottom)
+    }
+}

@@ -23,6 +23,7 @@ struct Welcome: View {
 
             VStack(spacing: 12) {
                 ContinueButton(isEnabled: true, title: "Get Started") {
+                    UIImpactFeedbackGenerator(style: .light).impactOccurred()
                     onboarding.startOnboarding()
                 }
                 .frame(height: 56)

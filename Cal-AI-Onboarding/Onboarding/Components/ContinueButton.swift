@@ -15,6 +15,7 @@ struct ContinueButton: View {
     var body: some View {
         Button(action: {
             if isEnabled {
+                UIImpactFeedbackGenerator(style: .light).impactOccurred()
                 action()
             }
         }) {

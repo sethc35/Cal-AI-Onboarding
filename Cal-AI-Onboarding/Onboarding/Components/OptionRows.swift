@@ -34,6 +34,7 @@ struct OptionRows<ID: Hashable>: View {
                     animationDelay: Double(index) * 0.1
                 )
                 .onTapGesture {
+                    UIImpactFeedbackGenerator(style: .light).impactOccurred()
                     selectedID = option.id
                 }
             }

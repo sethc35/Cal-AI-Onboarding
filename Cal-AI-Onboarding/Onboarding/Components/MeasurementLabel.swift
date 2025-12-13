@@ -13,6 +13,7 @@ struct MeasurementLabel: View {
 
     var body: some View {
         Text("\(value) \(unit)")
+            .font(.system(size: 16))
             .foregroundColor(.black)
     }
 }

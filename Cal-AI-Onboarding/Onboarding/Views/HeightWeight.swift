@@ -57,19 +57,26 @@ struct HeightWeight: View {
     }
 
     private var unitToggle: some View {
-        HStack(spacing: 16) {
+        HStack(spacing: 20) {
             unitLabel("Imperial", isActive: !isMetric)
+                .frame(maxWidth: .infinity)
+
+            unitLabel("Metric", isActive: isMetric)
+                .frame(maxWidth: .infinity)
+        }
+        .frame(maxWidth: .infinity)
+        .font(.system(size: 18, weight: .semibold))
+        .overlay(alignment: .center) {
             Toggle("", isOn: $isMetric)
                 .labelsHidden()
                 .tint(.black)
-            unitLabel("Metric", isActive: isMetric)
         }
-        .font(.system(size: 18, weight: .semibold))
     }
 
     private func unitLabel(_ text: String, isActive: Bool) -> some View {
         Text(text)
             .foregroundColor(isActive ? .black : Color.black.opacity(0.3))
+            .font(.system(size: 22, weight: .semibold))
     }
 
     private var pickerContent: some View {

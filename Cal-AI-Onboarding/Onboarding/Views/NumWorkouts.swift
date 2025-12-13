@@ -1,3 +1,10 @@
+//
+//  NumWorkouts.swift
+//  Cal-AI-Onboarding
+//
+//  Created by Seth Chang on 12/11/25.
+//
+
 import SwiftUI
 
 struct NumWorkouts: View {

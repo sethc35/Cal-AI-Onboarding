@@ -18,6 +18,9 @@ final class OnboardingData: ObservableObject {
         case triedOtherApps
         case results
         case heightWeight
+        case birthdate
+        case coachStatus
+        case goal
     }
 
     @Published var currentStepIndex: Int = 0
@@ -25,6 +28,9 @@ final class OnboardingData: ObservableObject {
     @Published var workoutsPerWeek: String? = nil
     @Published var hearAboutSource: String? = nil
     @Published var triedOtherAppsSelection: String? = nil
+    @Published var coachStatusSelection: String? = nil
+    @Published var goalSelection: String? = nil
+    @Published var birthdate: Date = Date()
 
     var totalSteps: Int { Step.allCases.count - 1 } // exclude welcome screen from progress
     var currentStepNumber: Int { max(currentStepIndex, Step.gender.rawValue) }
@@ -37,7 +43,7 @@ final class OnboardingData: ObservableObject {
 
     func goForward() {
         guard currentStepIndex < Step.allCases.count - 1 else {
-            debugPrint("Onboarding complete with selections:\n- Gender: \(gender ?? "None")\n- Workouts: \(workoutsPerWeek ?? "None")\n- Heard About: \(hearAboutSource ?? "None")\n- Tried Other Apps: \(triedOtherAppsSelection ?? "None")")
+            print("onboarding finished")
             return
         }
         currentStepIndex += 1

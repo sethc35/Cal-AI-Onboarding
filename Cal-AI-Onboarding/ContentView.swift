@@ -27,6 +27,12 @@ struct ContentView: View {
                 LongTermResults()
             case .heightWeight:
                 HeightWeight()
+            case .birthdate:
+                Birthdate()
+            case .coachStatus:
+                CoachStatus()
+            case .goal:
+                GoalSelection()
             }
         }
         .environmentObject(onboardingData)

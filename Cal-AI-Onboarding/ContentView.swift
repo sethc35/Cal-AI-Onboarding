@@ -27,7 +27,6 @@ struct ContentView: View {
                 LongTermResults()
             }
         }
-        .animation(.easeInOut, value: onboardingData.currentStep)
         .environmentObject(onboardingData)
     }
 }

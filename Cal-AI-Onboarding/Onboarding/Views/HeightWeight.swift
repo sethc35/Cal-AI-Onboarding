@@ -1,3 +1,10 @@
+//
+//  GenderScreen.swift
+//  Cal-AI-Onboarding
+//
+//  Created by Seth Chang on 12/13/25.
+//
+
 import SwiftUI
 import UIKit
 
@@ -89,8 +96,7 @@ struct HeightWeight: View {
     private var imperialFeetPicker: some View {
         Picker("Feet", selection: feetBinding) {
             ForEach(Self.feetOptions, id: \.self) { value in
-                Text("\(value) ft")
-                    .foregroundColor(.black)
+                MeasurementLabel(value: value, unit: "ft")
                     .tag(value)
             }
         }
@@ -100,8 +106,7 @@ struct HeightWeight: View {
     private var imperialInchesPicker: some View {
         Picker("Inches", selection: inchesBinding) {
             ForEach(Self.inchOptions, id: \.self) { value in
-                Text("\(value) in")
-                    .foregroundColor(.black)
+                MeasurementLabel(value: value, unit: "in")
                     .tag(value)
             }
         }
@@ -111,8 +116,7 @@ struct HeightWeight: View {
     private var metricHeightPicker: some View {
         Picker("Centimeters", selection: centimeterBinding) {
             ForEach(Self.heightCentimeterRange, id: \.self) { value in
-                Text("\(value) cm")
-                    .foregroundColor(.black)
+                MeasurementLabel(value: value, unit: "cm")
                     .tag(value)
             }
         }
@@ -124,14 +128,12 @@ struct HeightWeight: View {
             Picker("Weight", selection: isMetric ? kilogramBinding : poundBinding) {
                 if isMetric {
                     ForEach(Self.weightKilogramRange, id: \.self) { value in
-                        Text("\(value) kg")
-                            .foregroundColor(.black)
+                        MeasurementLabel(value: value, unit: "kg")
                             .tag(value)
                     }
                 } else {
                     ForEach(Self.weightPoundRange, id: \.self) { value in
-                        Text("\(value) lb")
-                            .foregroundColor(.black)
+                        MeasurementLabel(value: value, unit: "lb")
                             .tag(value)
                     }
                 }
@@ -148,9 +150,7 @@ struct HeightWeight: View {
                 .frame(maxWidth: .infinity, alignment: .center)
 
             content()
-                .frame(height: 190)
-                .frame(maxWidth: .infinity)
-                .clipped()
+                .frame(maxWidth: .infinity, idealHeight: 190)
         }
         .frame(maxWidth: .infinity)
     }

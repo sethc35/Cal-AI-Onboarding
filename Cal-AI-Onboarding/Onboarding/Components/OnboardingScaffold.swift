@@ -112,8 +112,7 @@ struct OnboardingScaffold<Content: View>: View {
                 startPoint: .top,
                 endPoint: .bottom
             )
-            .frame(height: 140)
-            .frame(maxWidth: .infinity)
+            .frame(maxWidth: .infinity, minHeight: 140, maxHeight: 140)
             .allowsHitTesting(false)
 
             VStack {

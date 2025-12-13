@@ -17,6 +17,7 @@ final class OnboardingData: ObservableObject {
         case hearAbout
         case triedOtherApps
         case results
+        case heightWeight
     }
 
     @Published var currentStepIndex: Int = 0

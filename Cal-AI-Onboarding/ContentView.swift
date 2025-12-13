@@ -25,6 +25,8 @@ struct ContentView: View {
                 TriedOtherApps()
             case .results:
                 LongTermResults()
+            case .heightWeight:
+                HeightWeight()
             }
         }
         .environmentObject(onboardingData)

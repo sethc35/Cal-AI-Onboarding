@@ -13,6 +13,7 @@ struct HeightWeight: View {
     @State private var isMetric = false
     @State private var heightInCentimeters = HeightWeight.defaultHeightCentimeters
     @State private var weightInKilograms = HeightWeight.defaultWeightKilograms
+    @State private var hasLoadedMeasurements = false
 
     private static let defaultHeightFeet = 5
     private static let defaultHeightInches = 9
@@ -24,12 +25,12 @@ struct HeightWeight: View {
     private static let feetOptions = Array(1...8)
     private static let inchOptions = Array(0...11)
 
-    private static var defaultHeightCentimeters: Double {
+    static var defaultHeightCentimeters: Double {
         let totalInches = Double(defaultHeightFeet * 12 + defaultHeightInches)
         return totalInches * 2.54
     }
 
-    private static var defaultWeightKilograms: Double {
+    static var defaultWeightKilograms: Double {
         Double(defaultWeightPounds) * 0.45359237 // round later I guess
     }
 
@@ -42,6 +43,9 @@ struct HeightWeight: View {
             isContinueEnabled: true,
             backAction: onboarding.canGoBack ? { onboarding.goBack() } : nil,
             continueAction: {
+                onboarding.measurementSystem = isMetric ? .metric : .imperial
+                onboarding.heightInCentimeters = heightInCentimeters
+                onboarding.weightInKilograms = weightInKilograms
                 onboarding.goForward()
             }
         ) {
@@ -51,6 +55,18 @@ struct HeightWeight: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .onChange(of: isMetric, perform: syncMeasurements)
+            .onChange(of: isMetric) { newValue in
+                onboarding.measurementSystem = newValue ? .metric : .imperial
+            }
+            .onChange(of: weightInKilograms) { newValue in
+                onboarding.weightInKilograms = newValue
+            }
+            .onChange(of: heightInCentimeters) { newValue in
+                onboarding.heightInCentimeters = newValue
+            }
+            .onAppear {
+                loadFromOnboardingIfNeeded()
+            }
         }
     }
 
@@ -300,6 +316,27 @@ struct HeightWeight: View {
 
     private func poundsToKilograms(_ pounds: Double) -> Double {
         pounds * 0.45359237
+    }
+
+    private func loadFromOnboardingIfNeeded() {
+        guard !hasLoadedMeasurements else { return }
+        hasLoadedMeasurements = true
+
+        isMetric = onboarding.measurementSystem == .metric
+
+        if let storedHeight = onboarding.heightInCentimeters {
+            heightInCentimeters = storedHeight
+        } else {
+            heightInCentimeters = Self.defaultHeightCentimeters
+            onboarding.heightInCentimeters = heightInCentimeters
+        }
+
+        if let storedWeight = onboarding.weightInKilograms {
+            weightInKilograms = storedWeight
+        } else {
+            weightInKilograms = Self.defaultWeightKilograms
+            onboarding.weightInKilograms = weightInKilograms
+        }
     }
 
 }

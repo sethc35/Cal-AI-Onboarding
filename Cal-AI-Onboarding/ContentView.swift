@@ -27,6 +27,8 @@ struct ContentView: View {
                 LongTermResults()
             case .heightWeight:
                 HeightWeight()
+            case .desiredWeight:
+                DesiredWeight()
             case .birthdate:
                 Birthdate()
             case .coachStatus:

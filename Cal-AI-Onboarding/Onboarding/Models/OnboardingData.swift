@@ -18,9 +18,15 @@ final class OnboardingData: ObservableObject {
         case triedOtherApps
         case results
         case heightWeight
+        case desiredWeight
         case birthdate
         case coachStatus
         case goal
+    }
+
+    enum MeasurementSystem: String, CaseIterable {
+        case imperial
+        case metric
     }
 
     @Published var currentStepIndex: Int = 0
@@ -31,6 +37,10 @@ final class OnboardingData: ObservableObject {
     @Published var coachStatusSelection: String? = nil
     @Published var goalSelection: String? = nil
     @Published var birthdate: Date = Date()
+    @Published var measurementSystem: MeasurementSystem = .imperial
+    @Published var heightInCentimeters: Double? = nil
+    @Published var weightInKilograms: Double? = nil
+    @Published var desiredWeightInKilograms: Double? = nil
 
     var totalSteps: Int { Step.allCases.count - 1 } // exclude welcome screen from progress
     var currentStepNumber: Int { max(currentStepIndex, Step.gender.rawValue) }

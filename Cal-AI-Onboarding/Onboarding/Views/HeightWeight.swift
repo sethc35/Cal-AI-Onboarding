@@ -50,9 +50,7 @@ struct HeightWeight: View {
                 pickerContent
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-            .onChange(of: isMetric) {
-                triggerLightHaptic()
-            }
+            .onChange(of: isMetric, perform: syncMeasurements)
         }
     }
 
@@ -244,6 +242,64 @@ struct HeightWeight: View {
 
     private func triggerLightHaptic() {
         UIImpactFeedbackGenerator(style: .light).impactOccurred()
+    }
+
+    private func syncMeasurements(isMetric: Bool) {
+        let metricHeightRange = Double(Self.heightCentimeterRange.lowerBound)...Double(Self.heightCentimeterRange.upperBound)
+        let metricWeightRange = Double(Self.weightKilogramRange.lowerBound)...Double(Self.weightKilogramRange.upperBound)
+        let imperialHeightRange: ClosedRange<Double> = {
+            let minFeet = Double(Self.feetOptions.first ?? 0)
+            let maxFeet = Double(Self.feetOptions.last ?? 0)
+            let minInches = Double(Self.inchOptions.first ?? 0)
+            let maxInches = Double(Self.inchOptions.last ?? 0)
+            let min = (minFeet * 12 + minInches) * 2.54
+            let max = (maxFeet * 12 + maxInches) * 2.54
+            return min...max
+        }()
+        let imperialWeightRange: ClosedRange<Double> = {
+            let min = Double(Self.weightPoundRange.lowerBound) * 0.45359237
+            let max = Double(Self.weightPoundRange.upperBound) * 0.45359237
+            return min...max
+        }()
+
+        if isMetric {
+            let feetRange = (Self.feetOptions.first ?? 0)...(Self.feetOptions.last ?? 0)
+            let inchRange = (Self.inchOptions.first ?? 0)...(Self.inchOptions.last ?? 0)
+            let feet = clamp(currentFeetValue, to: feetRange)
+            let inches = clamp(currentInchesValue, to: inchRange)
+            let totalInches = Double(feet * 12 + inches)
+            let centimeters = totalInches * 2.54
+            heightInCentimeters = clamp(centimeters, to: metricHeightRange)
+
+            let pounds = clamp(currentPoundsValue, to: Self.weightPoundRange)
+            let kilograms = poundsToKilograms(Double(pounds))
+            weightInKilograms = clamp(kilograms, to: metricWeightRange)
+        } else {
+            let centimeters = Double(clamp(centimeterBinding.wrappedValue, to: Self.heightCentimeterRange))
+            heightInCentimeters = clamp(centimeters, to: imperialHeightRange)
+
+            let kilograms = Double(clamp(kilogramBinding.wrappedValue, to: Self.weightKilogramRange))
+            weightInKilograms = clamp(kilograms, to: imperialWeightRange)
+        }
+
+        triggerLightHaptic()
+    }
+
+    private var currentFeetValue: Int {
+        let roundedInches = Int(heightInInches.rounded())
+        return roundedInches / 12
+    }
+
+    private var currentInchesValue: Int {
+        Int(heightInInches.rounded()) % 12
+    }
+
+    private var currentPoundsValue: Int {
+        Int((weightInKilograms * 2.20462).rounded())
+    }
+
+    private func poundsToKilograms(_ pounds: Double) -> Double {
+        pounds * 0.45359237
     }
 
 }
